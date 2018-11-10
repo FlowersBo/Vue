@@ -11,10 +11,10 @@
 </template>
 
 <script>
-  export default {}
+export default {}
 </script>
 
-<style scoped>
+<style>
   .todo-footer {
     height: 40px;
     line-height: 40px;
