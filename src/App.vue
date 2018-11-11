@@ -1,65 +1,50 @@
 <template>
-  <div class="todo-container">
-    <div class="todo-wrap">
-      <TodoHeader :addTodo="addTodo"/>
-      <TodoMain :todos="todos" :deleteTodo="deleteTodo"/>
-      <TodoFooter :todos="todos" :deleteCompleteTodos="deleteCompleteTodos" :selectAllTodos="selectAllTodos"/>
-    </div>
+  <div >
+    <h2 v-if="!repoName">Loading...</h2>
+    <h3 v-else>
+      most star repo is
+      <a :href="repoUrl">{{repoName}}</a>
+    </h3>
   </div>
 </template>
 
 <script>
-  import Header from './components/Header.vue';
-  import Main from './components/Main.vue';
-  import Footer from './components/Footer.vue';
-  import storageUtil from './utils/storageUtil';
+  import axios from 'axios'
   export default {
     data(){
-      return {
-        todos: storageUtil.rendTodos()
-      }
-    },
-    methods: {
-      addTodo(todo){
-        this.todos.unshift(todo);
-      },
-      deleteTodo(index){
-        this.todos.splice(index, 1)
-      },
-      deleteCompleteTodos(){
-        this.todos = this.todos.filter(todos => !todos.complete)
-      },
-      selectAllTodos(isCheck){
-        this.todos.forEach(
-          todo => todo.complete = isCheck
-        )
-      }
-    },
-    watch: {
-      todos: {
-        deep: true,
-        handler: function (value) {
-          storageUtil.saveTodos(value);
-        }
-      }
-    },
-    components: {
-      TodoHeader: Header,
-      TodoMain: Main,
-      TodoFooter: Footer
+  return{
+    repoName:'',
+    repoUrl:''
+  }
+},
+   async mounted(){//ajax请求 异步操作
+     /*this.$http.get('https://api.github.com/search/repositories?q=v&sort=stars')
+        .then(response=>{
+          const result=response.data
+          const mostRepo=result.items[0]
+          this.repoName= mostRepo.name
+          this.repoUrl= mostRepo.html_url
+        })
+        .catch(response=>{
+          alert('网络出错')
+        })*/
+     const url='https://api.github.com/search/repositories?q=v&sort=stars';
+    /*  axios.get(url)
+        .then(response=>{
+          const result=response.data
+          const mostRepo=result.items[0]
+          this.repoName= mostRepo.name
+          this.repoUrl= mostRepo.html_url
+          console.log(result);
+        })
+        .catch(response=>{
+          alert('网络出错')
+        })*/
+    const response=await axios.get(url)
     }
   }
 </script>
 
 <style>
-  .todo-container {
-    width: 600px;
-    margin: 0 auto;
-  }
 
-  .todo-container .todo-wrap {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
 </style>
