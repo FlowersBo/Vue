@@ -1,17 +1,37 @@
 <template>
-  <li>
+  <li :style="{background: color}"  @mouseenter="handleEnter(true)" @mouseleave="handleEnter(false)">
     <label>
-      <input type="checkbox" v-model="todo.complete"/>
+      <input type="checkbox" v-model="todo.complete" />
       <span>{{todo.title}}</span>
     </label>
-    <button class="btn btn-danger" style="display:none">删除</button>
+    <button class="btn btn-danger" v-show="isShow" @click="removeTodo">删除</button>
   </li>
 </template>
 
 <script>
   export default {
     props:{
-      todo: Object
+      todo: Object,
+      deleteTodo:Function,
+      index:Number
+    },
+    data(){
+      return{
+        color:'#fff',
+        isShow:false
+      }
+    },
+    methods:{
+      handleEnter(isEnter){
+        this.color=isEnter?'#ccc':'#fff'
+        this.isShow=isEnter
+      },
+      removeTodo(){
+        const {todo,deleteTodo, index}=this;
+       if(confirm(`确定删除${todo.title}吗？`)){
+         deleteTodo(index)
+       }
+      }
     }
   }
 </script>
@@ -39,7 +59,7 @@
 
   li button {
     float: right;
-    display: none;
+    /*display: none;*/
     margin-top: 3px;
   }
 
